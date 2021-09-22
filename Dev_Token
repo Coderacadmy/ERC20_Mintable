@@ -1,0 +1,47 @@
+pragma solidity ^0.7.0;
+
+contract ERC20{
+    
+    
+    // 1000000000000000000000
+    
+    string public _name = "DEV Token";
+    string public _symbol = "DEV";
+    uint8 public _decimal = 18;
+    uint256 public totalSupply;
+    address public onlyOwner;
+    
+    // event
+    event Transfer(address _sender, address _to, uint256 _amount);
+    
+    //balance mapping
+    mapping(address => uint256) public balanceOf;
+    
+    
+    //constructor
+    constructor(uint256 _totalsupply) public{
+        totalSupply = _totalsupply;
+        balanceOf[msg.sender] = _totalsupply;
+    }
+    
+    function transfer(address _to, uint256 _amount) public {
+        
+        // the user that is transfering amount must have sufficient balance
+        require(balanceOf[msg.sender] >= _amount, 'Transfer function : Sorry you have insufficient balance');
+        //subtract the amount from sender
+        balanceOf[msg.sender] -= _amount;
+        // add the amount to the receiver account
+        balanceOf[_to] += _amount;
+        // emit
+        emit Transfer(msg.sender, _to, _amount);
+        
+    }
+    
+  
+        function mint(uint256 _quantity) public returns(uint256){
+        totalSupply += _quantity;
+        balanceOf[msg.sender] += _quantity;
+        
+        return totalSupply;
+    }
+}
